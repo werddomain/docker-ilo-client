@@ -1,0 +1,248 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!--
+*
+*  Copyright 2005, 2017 Hewlett Packard Enterprise Development, L.P.
+*
+-->
+<html>
+<head>
+<LINK REL="stylesheet"  TYPE="text/css" HREF="riloe.css">
+<script>
+//<!-
+//
+//  Copyright 2001,2006 Hewlett-Packard Development Company, L.P.
+//
+//-->
+
+function writeTable( Tbl, nFields ) {		 // This function writes multiple fields in a table
+	// Generate each row
+	for ( i in Tbl ) {
+		document.write("<TR>");
+		for ( j = 0; j < nFields; j++ ) {
+			// Generate each column
+			document.write("<TD valign='top'>"+Tbl[i][j]+"</TD>");
+		}
+		document.write("</TR>");
+	}
+}
+
+function writeOut( outString ) {
+	document.write( outString );
+}
+
+function euroDate( dateString ) {
+	// Convert a mm/dd/yyyy date to a dd/mm/yyyy format
+	// Note: months and days must be 2 digits, year must be 4 digits
+	var month, day, year;
+	month = dateString[ 0 ] + dateString[ 1 ];
+	day   = dateString[ 3 ] + dateString[ 4 ];
+	year  = dateString[ 6 ] + dateString[ 7 ] + dateString[ 8 ] + dateString[ 9 ];
+	return day + "/" + month + "/" + year;
+}
+
+var helpUrl;
+var helpWindow = null;
+function openHelpWindow()
+{
+	
+	newUrl = getBrowserHelpUrl();
+	
+	if (!helpWindow || helpWindow.closed)
+	{
+		helpWindow = window.open( newUrl , "RILOEHelp", 'toolbar= 1,location= 0,directories= 0,status= 1,menubar= 0,scrollbars= 1,resizable= 1,width=800,height=400');
+	}
+	else
+	{
+		helpWindow.location = newUrl
+	}
+	helpWindow.focus();
+	return true;
+}
+
+function setBrowserHelpUrl(str)
+{
+	helpUrl = str;
+}
+
+function getBrowserHelpUrl()
+{
+	return helpUrl;
+}
+
+function viewOnly( thisForm )
+{
+	var eachInput;
+
+	for ( eachInput = 0; eachInput < thisForm.elements.length; eachInput++ )
+	{
+		thisForm.elements[ eachInput ].disabled = true;
+	}
+}	
+
+function handleError(desc, fileName, lineNum)
+{
+	msg = "Integrated Lights-Out has detected an error:\n\n"
+	msg += "Error Message: " + desc + "\n"
+	msg += "File Name: " + fileName + "\n"
+	msg += "Line Number: " + lineNum + "\n"
+	alert (msg)
+	return true;
+}
+window.onerror = handleError
+
+</SCRIPT>
+<script>
+currentUser="Administrator";
+shortCurrentUser="Administrator";
+serverName="localhost.entreprise.promec.";
+serverNameClean="localhost.entreprise.promec.";
+nicName="ILOMXQ11103BH";
+ipAddress="10.0.51.150";
+userAccess="-2147483505";
+redirurl="ilomxq11103bh.kazo";
+sslport="443";
+platform=":ilo:";
+UID="Yes";
+cimurl="";
+ad_men="0";
+cClass_flag="0";
+blade_rn=["","","","","","","","","",""];
+</SCRIPT>
+<script>
+flashInProgress="0";
+consoleWidth="2048";
+consoleHeight="2048";
+info1="LeifsFDIFieejf==";
+info2="RqwiTjdRjkfeisPf";
+info3="1";
+info4="FJIEWjisagjierw=";
+info5="GeifvgFJEWef";
+info6="23";
+infomp="9300";
+infoscp="17990";
+info7=60;
+info8="1";
+slot_number="0";
+info0="MHg3DWRlMTIyMTZjZDk3ZjY4YTMyMjQ0NjNkNTFkOTg3NmYx";
+irc_fullscreen="0";
+rcseize_timeout="0";
+</SCRIPT>
+<script>
+infoa="1";
+infob="B2D36F363C36E59A4FBF0DE517F43D4F";
+infoc="82D0FA089D1EA4972FEF6C46761E8C31";
+infod="10364866";
+infom=1;
+infomm=2;
+infok=1;
+infosc=1;
+infocc=1;
+infoae=0;
+infomu=0;
+infoms='none';
+infon=0;
+infoo="3389";
+infoscp="17990";
+infopriv="-2147483505";
+</SCRIPT>
+<SCRIPT language="JavaScript">
+var titl="<TITLE>RC: " + serverName;
+if (cClass_flag!=0) {
+   titl += ": Bay " + blade_rn[9] + " in " + blade_rn[3] + " in " + blade_rn[2];
+}
+titl += " - HP iLO 2 Remote Console</TITLE>";
+document.write(titl);
+
+setBrowserHelpUrl("hrcframe.htm");
+function onLoadFnc()
+{
+    setTimeout("closeOnDone();", 10000);
+}
+function closeOnDone()
+{
+    if (document.RC != null)
+    {
+        if (document.RC.initialized)
+        {
+            if (document.RC.initialized != 0)
+            {
+              timerValue = document.RC.getTimeoutValue();
+              if (timerValue <= 0)
+                window.close();
+              setTimeout("closeOnDone()", 60000);
+              return;
+            }
+        }
+    }
+    setTimeout("closeOnDone()", 1000);
+}
+<!-- disable IE help function -->
+document.onhelp =
+  function () {
+    return false;
+  };
+function closeWindow()
+{
+    window.close();
+}
+</script>
+</HEAD>
+
+<body class="data" bgcolor="ffffff" onLoad="onLoadFnc();">
+
+<TABLE BORDER=0 WIDTH=100% CELLPADDING=0>
+<tr>
+<td width=250><img src="iLO2_blue.jpg" height=57/></td>
+<td width=100%><table width=100%><tr>
+   <td align=center><B><font size=4>Remote Console</font></center</B><br>
+       <INPUT TYPE=button value="Close" onClick="closeWindow();">
+   </td>
+   <td>
+      <script language=javascript>
+         if (serverName != "host is unnamed") {
+            document.writeln(serverName+" at ");
+         }
+         document.writeln(ipAddress);
+         if (slot_number != 0) {
+            document.writeln("<br>");
+            document.writeln("Enclosure Name: "+chassis_name+", Bay: "+slot_number);
+         }
+     </script>
+  </td></tr>
+</table></td>
+<td width="219px">&nbsp;</td>
+<td valign="top" align="right"><img src="qmark_white.gif" width="31" height="41" alt=""
+    border="0" style="cursor:hand;" onClick=openHelpWindow() alt="Help"></td>
+</tr></TABLE>
+<center><FONT SIZE=1>
+Right mouse drag whenever necessary to align the local and remote cursors.<br>
+If necessary, click in Remote Console image below to enable keyboard input.
+</font></center>
+<br>
+
+<script language="JavaScript">
+document.writeln("<APPLET ID=\"RC\" CODE=\"com.hp.ilo2.remcons.remcons.class\"");
+document.writeln("ARCHIVE=rc175p11.jar WIDTH="+consoleWidth+" HEIGHT="+consoleHeight+">");
+document.writeln("<PARAM NAME=CABBASE VALUE=rc175p11.cab>");
+document.writeln("<PARAM NAME=\"INFO0\" VALUE=\""+info0+"\">");
+document.writeln("<PARAM NAME=\"INFO1\" VALUE=\""+info1+"\">");
+document.writeln("<PARAM NAME=\"INFO3\" VALUE=\""+info3+"\">");
+document.writeln("<PARAM NAME=\"INFO6\" VALUE=\""+info6+"\">");
+document.writeln("<PARAM NAME=\"INFO7\" VALUE=\""+info7+"\">");
+document.writeln("<PARAM NAME=\"INFO8\" VALUE=\""+info8+"\">");
+document.writeln("<PARAM NAME=\"INFOA\" VALUE=\""+infoa+"\">");
+document.writeln("<PARAM NAME=\"INFOB\" VALUE=\""+infob+"\">");
+document.writeln("<PARAM NAME=\"INFOC\" VALUE=\""+infoc+"\">");
+document.writeln("<PARAM NAME=\"INFOD\" VALUE=\""+infod+"\">");
+document.writeln("<PARAM NAME=\"INFOM\" VALUE=\""+infom+"\">");
+document.writeln("<PARAM NAME=\"INFOMM\" VALUE=\""+infomm+"\">");
+document.writeln("<PARAM NAME=\"INFON\" VALUE=\""+infon+"\">");
+document.writeln("<PARAM NAME=\"INFOO\" VALUE=\""+infoo+"\">");
+document.writeln("<br><font size=\"1\">");
+document.writeln("The remote console feature requires a Java Virtual Machine. <a href=\"https://java.com/download\" class=\"misc\" target=\"Download JVM\">Click here to download a JVM.</a>");
+document.writeln("Download it now if the Remote Console is not displayed below.");
+document.writeln("</font>");
+document.writeln("</APPLET>");
+</script>
+</body>
+</html>

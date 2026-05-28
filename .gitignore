@@ -1,0 +1,8 @@
+# Secrets - do not commit
+.env
+htpasswd
+
+# CA certificates (mounted at runtime)
+/app-data/*.crt
+
+

@@ -1,0 +1,815 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<!--
+*
+*  Copyright 2001, 2018 Hewlett Packard Enterprise Development, L.P.
+*
+-->
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+<meta http-equiv="PRAGMA" content="NO-CACHE">
+<meta http-equiv="expires" content="0">
+<title>HP Integrated Lights-Out 2 Login</title>
+<link rel="icon" href="https://ilomxq11103bh.kazo/ilo.ico">
+<script>
+var detect = navigator.userAgent.toLowerCase();
+var ie = detect.match(/msie\s([\d\.]+)/);
+var moz = detect.match(/rv:([\d\.]+)/);
+var fire = detect.match(/firefox\/([\d\.]+)/);
+if(
+		(ie != null && parseFloat(ie[1]) >= 7.0) ||
+		(fire != null && parseFloat(fire[1]) >= 1.9) ||
+		(moz != null && parseFloat(moz[1]) >= 1.6)
+		) {
+        // supported browser; do nothing
+} else {
+        alert( "Integrated Lights-Out 2 supports Microsoft Internet Explorer version 7.0 or greater, Firefox version 1.9.1 or greater, and Mozilla version 1.6 or greater.  Some functionality may not work and pages may not format correctly on other browser platforms.  This browser platform reports it is \""+navigator.userAgent+"\"");
+}
+
+if( top.window != this.window ) {
+   top.location="login.htm";
+}
+
+ADS_NAME_INITTYPE_DOMAIN              = 1;
+ADS_NAME_INITTYPE_SERVER              = 2;  
+ADS_NAME_INITTYPE_GC                  = 3;
+
+ADS_NAME_TYPE_1779                    = 1;
+ADS_NAME_TYPE_CANONICAL               = 2;
+ADS_NAME_TYPE_NT4                     = 3;
+ADS_NAME_TYPE_DISPLAY                 = 4;
+ADS_NAME_TYPE_DOMAIN_SIMPLE           = 5;
+ADS_NAME_TYPE_ENTERPRISE_SIMPLE       = 6;
+ADS_NAME_TYPE_GUID                    = 7;
+ADS_NAME_TYPE_UNKNOWN                 = 8;
+ADS_NAME_TYPE_USER_PRINCIPAL_NAME     = 9;
+ADS_NAME_TYPE_CANONICAL_EX            = 10;
+ADS_NAME_TYPE_SERVICE_PRINCIPAL_NAME  = 11;
+ADS_NAME_TYPE_SID_OR_SID_HISTORY_NAME = 12;
+
+</script>
+<link rel="stylesheet" type="text/css" href="HP%20Integrated%20Lights-Out%202%20Login_files/riloe.css">
+<script>
+var sessionkey="DAHOWPGZIJJEOZDAEQXEYXOVDCUMEEYBNYILCWLQ";
+var sessionindex="00000002";
+</script>
+<script>
+SecurityJumper="PRESENT";
+</script>
+<script>
+var licensed=1;
+var enabldap=0;
+var enablocalu=1;
+var enabcertchk=1;
+var servers="";
+var tfauth=0;
+var scname="";
+</script>
+<script>
+sso=0;
+</script>
+<script>
+
+
+
+function ButtonManager() {
+
+}
+
+
+ButtonManager.prototype.getWrapperReference = function(btnWrapperObj) {
+	var	ob = btnWrapperObj;
+	var className = ob.className;
+	while (className.indexOf("bWrapper")==-1) {
+		ob = ob.parentNode;
+		className = ob.className;
+	}
+	return ob;
+}
+
+ButtonManager.prototype.hpButtonOver = function(btnWrapperObj) {
+	var ob = this.getWrapperReference(btnWrapperObj);
+	var childButton = this.getButtonChild(ob);
+	if (!childButton.disabled) {
+		if (ob.className.indexOf("bEmphasized")!=-1) {
+			ob.className = "bWrapperOver bEmphasized";
+		}
+		else {
+			ob.className = "bWrapperOver";
+		}
+	}
+}
+
+ButtonManager.prototype.hpButtonUp = function(btnWrapperObj) {
+	var ob = this.getWrapperReference(btnWrapperObj);
+	var childButton = this.getButtonChild(ob);
+	if (!childButton.disabled) {
+		if (ob.className.indexOf("bEmphasized")!=-1) {
+			ob.className = "bWrapperUp bEmphasized";
+		}
+		else {
+			ob.className = "bWrapperUp";
+		}
+
+	}
+}
+
+ButtonManager.prototype.hpButtonDown = function(btnWrapperObj) {
+	var ob = this.getWrapperReference(btnWrapperObj);
+	var childButton = this.getButtonChild(ob);
+	if (!childButton.disabled) {
+		if (ob.className.indexOf("bEmphasized")!=-1) {
+			ob.className = "bWrapperDown bEmphasized";
+		}
+		else {
+			ob.className = "bWrapperDown";
+		}
+		childButton.focus();
+	}
+}
+
+ButtonManager.prototype.disableButton = function(btnObj) {
+	btnObj.disabled = true;
+	var wrapper = this.getWrapperReference(btnObj);
+	wrapper.onmousedown= null;
+	wrapper.onmouseup=  null;
+	wrapper.onmouseover=  null;
+	wrapper.onmouseout=  null;
+	if (wrapper.className.indexOf("bEmphasized")!=-1) {
+		wrapper.className = "bWrapperDisabled bEmphasized";
+	}
+	else {
+		wrapper.className = "bWrapperDisabled";
+	}
+}
+ButtonManager.prototype.enableButton = function(btnObj) {
+	btnObj.disabled = false;
+	var wrapper = this.getWrapperReference(btnObj);
+	if (wrapper.className.indexOf("bEmphasized")!=-1) {
+		wrapper.className = "bWrapperUp bEmphasized";
+	}
+	else {
+		wrapper.className = "bWrapperUp";
+	}
+	wrapper.onmousedown= function() {ourButtonManager.hpButtonDown(this);}
+	wrapper.onmouseup= function() {ourButtonManager.hpButtonOver(this);}
+	wrapper.onmouseover= function() {ourButtonManager.hpButtonOver(this);}
+	wrapper.onmouseout= function() {ourButtonManager.hpButtonUp(this);}
+}
+ButtonManager.prototype.disableButtonById = function(btnId) {
+	var btnObj = document.getElementById(btnId)
+	this.disableButton(btnObj);
+}
+ButtonManager.prototype.enableButtonById = function(btnId) {
+	var btnObj = document.getElementById(btnId)
+	this.enableButton(btnObj);
+}
+ButtonManager.prototype.getButtonChild = function(divObj) {
+	var nodes = divObj.getElementsByTagName("*");
+	for(var i = 0; i < nodes.length; i++)
+		if(nodes[i].tagName == "BUTTON" || nodes[i].tagName == "INPUT" || nodes[i].tagName == "A" || nodes[i].tagName == "SUBMIT")
+			return nodes[i];
+
+	return nodes[0];
+}
+
+
+ButtonManager.prototype.init  = function() {
+	var divs = document.getElementsByTagName("DIV");
+	for (var i=0;i<divs.length;i++) {
+		
+		if (divs[i].className.indexOf("bWrapper")!=-1) {
+				
+			// some button styles might have two nested divs, making a 2px border, or three.  therefore we have to be careful when we look down inside the divs looking for the buttons. 
+			var button = this.getButtonChild(divs[i]);
+
+			// looking up to see if we're in a vertical button set. 
+			var lookingForVerticalButtonSet = divs[i];
+			while ((lookingForVerticalButtonSet) && (lookingForVerticalButtonSet.className!="verticalButtonSet")) {
+				lookingForVerticalButtonSet = lookingForVerticalButtonSet.parentNode;
+			}
+			if (lookingForVerticalButtonSet) {
+				button.style.width = "100%";
+			}
+			else if ((!button.getAttribute("disableminimumwidth")) && (button.className.indexOf("shrinkWrapButton")==-1)){
+
+				
+				// setting widths based on which size button this is to be. 
+				// tempting to use CSS property min-width and  accept that it only works on mozilla. However mozilla forces align left in this case, which does more harm than good to the design. 
+				if (button.className.indexOf("hpButtonSmall")!=-1) {				
+					if (button.offsetWidth < 47) button.style.width = "47px";
+				}
+				else if (button.className.indexOf("hpButtonVerySmall")!=-1) {
+					// these are tiny buttons with no minimum width, like the help button on the pagetitle bar. 
+				}
+
+				// catchall 
+				//  This line causes some mozilla problems with the vertical buttons btw, although it is no longer used by them. 
+				else if (button.offsetWidth < 83) button.style.width = "83px";
+			}
+
+			if (!button.disabled) {
+				divs[i].onmousedown= function() {ourButtonManager.hpButtonDown(this);}
+				divs[i].onmouseup= function() {ourButtonManager.hpButtonOver(this);}
+				divs[i].onmouseover= function() {ourButtonManager.hpButtonOver(this);}
+				divs[i].onmouseout= function() {ourButtonManager.hpButtonUp(this);}
+				
+
+
+				// this effectively transfers the onclick up to the level of the div. 
+				// this makes the entire div+button structure effectively into the 'button', and moreover covers cases when the user clicks only one of the the right or bottom borders. 
+				if (button.onclick) {	
+					eval("divs[i].onclick = function() {var hardCodedFunction = "+button.onclick+" ;return hardCodedFunction();};");
+					button.onclick = function(event) {};
+				}
+				
+
+				var buttonChildren = divs[i].getElementsByTagName("BUTTON");
+				var inputChildren = divs[i].getElementsByTagName("INPUT");
+				for (var j=0;j<buttonChildren.length;j++) {
+
+					buttonChildren[j].onfocus = function() {ourButtonManager.hpButtonDown(this);}
+					buttonChildren[j].onblur = function() {ourButtonManager.hpButtonUp(this);}
+				}
+				for (var j=0;j<inputChildren.length;j++) {
+					inputChildren[j].onfocus = function() {ourButtonManager.hpButtonDown(this);}
+					inputChildren[j].onblur = function() {ourButtonManager.hpButtonUp(this);}
+				}
+			}
+			else {
+				if (divs[i].className.indexOf("bEmphasized")!=-1) {
+					divs[i].className = "bWrapperDisabled bEmphasized";
+				}
+				else {
+					divs[i].className = "bWrapperDisabled";
+				}
+			}
+		}
+	}
+}
+
+</script>
+<script>
+
+// this function will patch a click method onto anchor elements for Mozilla. Due apparently to confusion in the early DOM spec, anchor elements in mozilla are missing click methods. This will attach a click method to HTMLElement so that all elements, being descendants of this object will inherit it if they dont have one of their own. 
+if (!document.all) {
+  try {
+		document.createElement('a');
+		HTMLElement.prototype.click = function () {
+			if (typeof this.onclick == 'function') {
+				if (this.onclick({type: 'click'}) && this.href) 
+					window.open(this.href, this.target ? this.target : '_self');
+			}
+			else if (this.href)
+				window.open(this.href, this.target ? this.target : '_self');
+		}
+	}
+	catch (e) {
+		window.status='Warning: your browser is unable to attach click methods to all elements.';
+	}
+}
+
+
+
+// only for use with absolute positioned elements. 
+function mouseIsOverAbsElement(obj) {
+	if ((mouseX < obj.offsetLeft) || (mouseX > obj.offsetLeft + obj.offsetWidth)) return false;
+	else if ((mouseY < obj.offsetTop) || (mouseY > obj.offsetTop + obj.offsetHeight)) return false;
+	else return true;
+}
+function mouseTracker(e) {
+	mouseX = (document.all) ? window.event.x : e.pageX;
+	mouseY = (document.all) ? window.event.y : e.pageY;
+}
+
+window.onmousemove = mouseTracker;
+var mouseX = 0;
+var mouseY = 0;
+
+
+function globalComponentInit() {
+	if (typeof(ButtonManager)!="undefined") {
+		ourButtonManager = new ButtonManager();
+		ourButtonManager.init();
+	}
+	if (typeof(TransferBoxManager)!="undefined") {
+		ourTransferBoxManager = new TransferBoxManager();
+		ourTransferBoxManager.init();
+	}
+	if (typeof(DropdownMenuManager)!="undefined") {
+		ourDropdownMenuManager = new DropdownMenuManager();
+		ourDropdownMenuManager.init();
+		document.onmousedown= dropdownMenuManager_clearMenus;
+	}
+	if (typeof(NavigationControlManager)!="undefined") {
+		ourNavigationControlManager = new NavigationControlManager();
+		ourNavigationControlManager.init();
+	}
+	if (typeof(TabManager)!="undefined") {
+		ourTabManager = new TabManager();
+		ourTabManager.init();
+	}
+	if (typeof(TableManager)!="undefined") {
+		ourTableManager = new TableManager();
+		ourTableManager.init();
+	
+		
+		tableManager_windowResize();
+		// to disable the default behaviour that ctrl-clicks selects a whole word. 
+		// Ctrl-click within hp applications has a special meaning. 
+		if (document.all) {					
+			document.onselectstart = function() {var ctrlKey = (document.all) ? window.event.ctrlKey :mozEvent.ctrlKey;if (ctrlKey)return false;}
+		}
+	}
+	if (typeof(TreeManager)!="undefined") {
+		ourTreeManager = new TreeManager();
+		ourTreeManager.init();
+	}
+	if (typeof(TreeTableManager)!="undefined") {
+		ourTreeTableManager = new TreeTableManager();
+		ourTreeTableManager.init();
+	}	
+}
+
+var ourButtonManager = null;
+var ourTransferBoxManager = null;
+var ourDropdownMenuManager = null;
+var ourNavigationControlManager = null;
+var ourTabManager = null;
+var ourTableManager = null;
+var ourTreeManager = null;
+var ourTreeTableManager = null;
+
+
+
+function dF(foo) {
+	document.debugform.debugtext.value += foo + "\n";
+}
+
+// a little global function that returns a reasonably cross-browser reference to the originating object of the given mozEvent. 
+function getEventOriginator(mozEvent) {
+	return (document.all) ?  event.srcElement : mozEvent.target;
+}
+
+// attaches event handlers that various components need, without destroying the application's own event handlers in the process.
+function reconcileEventHandlers() {
+	if (window.onload) {   // some onload code has been placed into the body tag, or some function assigned to window.onload, before this function was called.
+		// capture it as a function object, assign it to a var. 
+		var applicationLevelOnload = window.onload;  		
+		// execute our globalComponentInit, then execute the function object holding the other onload code. 
+		eval("window.onload = function() {globalComponentInit();var applicationLevelOnload="+applicationLevelOnload+";applicationLevelOnload()}");
+	}
+	else { // window.onload is still untouched when this function gets called. 
+		window.onload = globalComponentInit;
+	}
+
+	if (typeof(TableManager)!="undefined") {
+		
+		if (window.onresize) {
+			var applicationLevelOnresize = window.onresize;
+			eval("window.onresize = function() {tableManager_windowResize();var applicationLevelOnresize="+applicationLevelOnresize+";applicationLevelOnresize();}");
+		}
+		else { // window.onload is still untouched when this function gets called. 
+			window.onresize = tableManager_windowResize;
+		}
+	}
+}
+// some implementations where classNames need to be changed may have multiple class selectors in their classname.  This will add a classname as a class selector, if it is not already present, and without deleting other unrelated classnames that might be present. 
+function appendClassName(obj, newClassName) {
+	if (obj.className.indexOf(newClassName)!=-1) return true;
+	if (!obj.className) obj.className = newClassName;
+	else obj.className = obj.className + " " + newClassName;
+}
+function removeClassName(obj, classNameToRemove) {
+	var newClassName = obj.className.replace(" "+classNameToRemove,"");
+	newClassName = newClassName.replace(classNameToRemove+" ","");
+	if (obj.className.length == newClassName.length) {
+		newClassName = newClassName.replace(classNameToRemove,"");
+	}
+	obj.className = newClassName;
+}
+</script>
+<script language="javascript">
+<!--\n//hide
+
+function b64encode(string)
+{
+   var v0, v1, v2, v3;
+   var sST = "";
+   var b64_str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+    
+   // convert string (input) to array of numbers
+   var str = new Array(string.length);
+   for (i=0; i<string.length; i++) {
+      str[i]= string.charCodeAt(i);
+   }
+   
+    // every three bytes in is 4 characters out.  Pad handles the remainder.
+   var len = str.length - str.length % 3;
+   var pad = str.length % 3;
+
+   for(i=0; i < len; i+=3) {
+      v0 = ((str[i] & 0xfc) >>> 2);
+      v1 = ((str[i] & 0x03) << 4) + ((str[i+1] & 0xf0) >>> 4);
+      v2 = ((str[i+1] & 0x0f) << 2) + ((str[i+2] & 0xc0) >>> 6);
+      v3 = (str[i+2] & 0x3f);
+      
+      sST += b64_str.charAt(v0);
+      sST += b64_str.charAt(v1);
+      sST += b64_str.charAt(v2);
+      sST += b64_str.charAt(v3);
+   }
+
+    // remainder padded with "="
+   switch(pad) {
+      default:
+      case 0:
+            break;
+      
+      case 1:
+            v0 = ((str[i] & 0xfc) >>> 2);
+            v1 = ((str[i] & 0x03) << 4);
+            sST += b64_str.charAt(v0) + b64_str.charAt(v1) + "==";
+            break;
+      
+      case 2:
+            v0 = ((str[i] & 0xfc) >>> 2);
+            v1 = ((str[i] & 0x03) << 4) + ((str[i+1] & 0xf0) >>> 4);
+            v2 = ((str[i+1] & 0x0f) << 2);
+            sST += b64_str.charAt(v0) + b64_str.charAt(v1) + b64_str.charAt(v2) + "=";
+            break;
+   }
+   return sST;
+}
+
+function GetCookie(name)
+{
+   index = document.cookie.indexOf(name, 0);
+   if(index == -1) return null;
+   index += name.length + 1;
+   endex = document.cookie.indexOf(";", index);
+   if(endex == -1) endex = document.cookie.length;
+   return document.cookie.substring(index, endex);
+}
+
+function SetCookie (name, value, path, secure, expires, domain)
+{
+   document.cookie = name + 
+                      "=" +
+                      value +
+                      ((expires == null) ? "" : ("; expires=" + expires.toGMTString())) +
+                      ((path == null) ? "" : ("; path=" + path)) +
+                      ((domain == null) ? "" : ("; domain=" + domain)) +
+                      ((secure == true) ? "; secure" : "");
+}
+
+function get1779(strName, strPassword, strServer, method)
+   {
+   var nto;
+   var strDn = "";
+   var strNetBIOSDomain = "";
+   var strUserName = "";
+
+   if(strName.indexOf("\\", 0) != -1)
+      {
+      strNetBIOSDomain = strName.slice(0, strName.indexOf("\\"));
+      strUserName      = strName.slice(strName.indexOf("\\")+1);
+      }
+   else if(strName.indexOf("@", 0) != -1)
+      {
+      strUserName      = strName.slice(0, strName.indexOf("@"));
+      strNetBIOSDomain = strName.slice(strName.indexOf("@")+1);
+      }
+   else
+      {
+      strUserName      = strName;
+      strNetBIOSDomain = "";
+      }
+
+   try
+      {
+      nto = new ActiveXObject("NameTranslate");
+      
+      // We are going to get the name from a server
+      if(method == ADS_NAME_INITTYPE_GC || strNetBIOSDomain.length == 0)
+         {
+         nto.Init(ADS_NAME_INITTYPE_GC, strServer);
+         }
+      else
+         {
+         nto.InitEx(ADS_NAME_INITTYPE_SERVER, strServer, strUserName, strNetBIOSDomain, strPassword);
+         }
+
+      // Give it a name
+      nto.Set(ADS_NAME_TYPE_UNKNOWN, strName);
+
+      // Get the name back in RFC 1779 format
+      strDn = nto.Get(ADS_NAME_TYPE_1779);
+      }
+   catch(ex)
+      {
+      window.status = ("Unable to get DN - Exception[" + ex.name + "]: " + ex.message);
+      }
+   return(strDn);
+   }
+
+function getDn(strName, strPassword)
+   {
+   var dn = "";
+
+   if(strName.toUpperCase().indexOf("CN", 0) == 0)
+      {
+      // Starts with a CN. Assume this is a DN so do not try to convert it.
+      return(dn);
+      }
+   if(servers.length == 0)
+      {
+      dn = get1779(strName, strPassword, "", ADS_NAME_INITTYPE_GC);   
+      }
+   else
+      {
+      var serverArray = servers.split(",");
+
+      for(var i=0; i<serverArray.length; i++)
+         {
+         try
+            {
+            dn = get1779(strName, strPassword, serverArray[i], ADS_NAME_INITTYPE_SERVER);  
+            window.status = dn;
+            }
+         catch(ex)
+            {
+            dn = "";
+            window.status = "Exception[" + ex.name + "]: " + ex.message;
+            }
+
+         if(dn.length > 0)
+            {
+            break;
+            }
+         }
+      }
+
+   return(dn);
+   }
+
+function MakeCookie()
+{
+   var username = document.forms[0].UN.value;
+   var password = document.forms[0].PW.value;
+   var dn;
+
+   if((SecurityJumper == "REMOVED") || (username.length > 0)) 
+      {
+      if(enabldap==2)
+         {
+         dn = getDn(username, password);
+         }
+      else
+         {
+         dn = "";
+         }
+
+      token = createToken(username, password, dn, sessionkey, sessionindex);
+      SetCookie('hp-iLO-Login', token, '/', true, null, null);
+
+      return true;
+      } 
+   else 
+      {
+      alert('Invalid Username');
+      return false;
+      }
+}
+
+function createToken(user, pass, dn, key, index)
+{
+   var encoded_name = b64encode(user);
+   var encoded_pass = b64encode(pass);
+   var encoded_dn   = b64encode(dn);
+   var token        = index + ':' + encoded_name + ':' + encoded_pass + ':' + key;
+
+   if(encoded_dn.length > 0)
+      {
+      token += ':' + encoded_dn;
+      }
+
+//   return index + ':' + encoded_name + ':' + encoded_pass + ':' + key + ':' + encoded_dn;
+   return(token);
+}
+
+var currentFocus;
+
+if (!ie)
+{
+   document.captureEvents(Event.KEYPRESS | Event.KEYDOWN);
+}
+
+function setFocus(backward)
+{
+    if (currentFocus == 0) {
+      if (backward) {
+           document.forms[0].elements[3].focus();
+      } else {
+           document.forms[0].elements[1].focus();
+      }
+    } else if (currentFocus == 1) {
+      if ((backward) && !(scname)) {
+           document.forms[0].elements[0].focus();
+      } else {
+           document.forms[0].elements[2].focus();
+           setIndex(2);
+      }         
+    } else if (currentFocus == 2) {
+      if ((backward) && !(scname)) {
+           document.forms[0].elements[1].focus();
+      } else {
+           document.forms[0].elements[3].focus();
+           setIndex(3);
+      }         
+    } else {
+      if ((backward) || (scname)) {
+           document.forms[0].elements[2].focus();
+      } else {
+           document.forms[0].elements[0].focus();
+      }         
+    }
+}
+
+function keyhandler(e)
+{
+    var event = e ? e : window.event;
+
+    // return key
+    if (event.keyCode == 13) {
+        if (currentFocus == 0) {
+            document.forms[0].elements[1].focus();
+            event.returnValue = false;
+        }
+        if (currentFocus == 1) {
+            if ((document.forms[0].elements[0].value == '') || (document.forms[0].elements[1].value == '')) {
+                event.returnValue = false;
+            } else {
+                document.forms[0].elements[2].click();
+                event.returnValue = false;
+            }
+        }
+    }
+   // tab key
+    if (event.keyCode == 9) {
+      if (ie)
+      {
+         if (event.shiftKey)
+            setFocus(true);
+         else
+            setFocus(false);
+      }
+      else
+      {
+           if ((currentFocus == 2) && !(scname))
+               document.forms[0].elements[3].focus();
+      }
+        event.returnValue = false;
+    }
+}
+
+function setIndex(where)
+{
+    currentFocus=where;
+}
+
+function onLoadFnc()
+{
+    if (sessionkey == "NONEAVAILABLE") {
+        top.location.replace("nosess.htm");
+    }
+}
+//-->
+</script>
+
+</head>
+
+<body onload="onLoadFnc()" vlink="#0F4780" text="#000000" link="#0F4780" bgcolor="#FFFFFF" alink="#FF0000">
+<form name="loginForm">
+<font face="ARIAL">
+</font><table style="LEFT: 0px; POSITION: absolute; TOP: 0px">
+<tbody><tr height="287px"><td width="593px" bgcolor="#003366">
+<div style="LEFT: 23px; POSITION: absolute; TOP: 26px">
+	<a href="http://www.hpe.com/" target="new"><img src="HP%20Integrated%20Lights-Out%202%20Login_files/hp_blue.gif" alt="Hewlett-Packard Corporation" border="0"></a>
+</div>
+<div style="LEFT: 150px; POSITION: absolute; TOP: 180px"><a href="http://www.hpe.com/support/ilo2" target="new">
+<img src="HP%20Integrated%20Lights-Out%202%20Login_files/ilo2_large.jpg" alt="Integrated Lights-Out" height="100" border="0"></a>
+</div></td>
+<td width="404px" bgcolor="#003366" align="center"><img src="HP%20Integrated%20Lights-Out%202%20Login_files/telescopeLg.gif" width="404px" height="287px"></td>
+</tr>
+
+<script>
+if (SecurityJumper == "REMOVED")
+{
+   document.write("<TR><TD ALIGN=CENTER COLSPAN=2 BGCOLOR=\"E4E4E4\">");
+   document.write( "<font color='red'><b>Alert!  iLO security override switch is set. Security enforcement is disabled.</b></font><br>" );
+   document.write("</TD></TR>");
+}
+</script>
+
+
+<script language="javascript">
+lname="Login name:&nbsp;";
+var tdWidth1 = 27;
+var tdWidth2 = 73;
+if ((1==licensed)&&(0!=enabldap)&&(1==tfauth)) {
+   lname="Directory user:&nbsp;";
+   tdWidth1 = 35;
+   tdWidth2 = 65;
+}
+else if ((1==licensed)&&(0!=enabldap)&&(0==enablocalu)) {
+  lname="Directory or local user login name:&nbsp;";
+  tdWidth1 = 50;
+  tdWidth2 = 50;
+} else if ((1==licensed)&&(0!=enabldap)&&(1==enablocalu)) {
+  lname="Directory user login name:&nbsp;";
+  tdWidth1 = 45;
+  tdWidth2 = 55;
+} 
+</script>
+<!--<TABLE WIDTH=100% BORDER=0>-->
+<tr height="283px">
+<td colspan="2" bgcolor="#E4E4E4">
+<table width="997px" border="0">
+<script>
+document.write("<TR><TD ALIGN=RIGHT WIDTH=\"593px\">"+lname+"</TD>");
+</script><tbody><tr><td width="593px" align="RIGHT">Login name:&nbsp;</td>
+<td width="404px" align="LEFT"><input name="UN" type="textfield" size="40" onfocus="setIndex(0)" onkeypress="keyhandler(event)" onkeydown="if (ie) keyhandler(event)" value="Administrator"><br>
+</td></tr>
+<script>
+document.write("<TR><TD ALIGN=RIGHT>Password:&nbsp;</TD>");
+</script><tr><td align="RIGHT">Password:&nbsp;</td>
+<td align="LEFT"><input name="PW" type="password" maxlength="39" size="40" autocomplete="off" onfocus="setIndex(1)" onkeypress="keyhandler(event)" onkeydown="if (ie) keyhandler(event)"><br>
+</td></tr>
+<tr><td></td><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td><td>&nbsp;
+<div class="buttonSet buttonsAreLeftAligned">
+<div class="bWrapperUp" style="LEFT: 607px' POSITION: absolute;"><div><div><input name="LI" type="button" class="hpButton" value="      Log In      " onfocus="setIndex(2)" onkeypress="keyhandler(event)" onkeydown="if (ie) keyhandler(event)" onclick="if( MakeCookie() ) top.location.replace('index.htm');"></div></div></div>
+<div class="bWrapperUp" style="LEFT: 750px' POSITION: absolute;"><div><div><input name="clear" type="button" class="hpButton" value="      Clear     " onfocus="setIndex(3)" onkeydown="if (ie) keyhandler(event)" onclick="top.location.replace('login.htm');"></div></div></div>
+
+</div><div class="clearFloats"></div>
+</td></tr><tr><td>&nbsp;</td></tr><tr><td>&nbsp;</td></tr><tr><td>&nbsp;</td></tr><tr><td>&nbsp;</td></tr>
+<tr><td></td><td>
+<font size="1">
+<b>
+© Copyright 2005, 2018 Hewlett Packard Enterprise Development, L.P.<br>
+<br>
+Contains security software licensed from RSA Data Security Inc.<br>
+Portions Copyright 1989, 1991, 1992 by Carnegie Mellon University<br>
+Derivative Work - 1996, 1998-2000 Copyright 1996, 1998-2000 The Regents of the University of California<br>
+</b>
+</font>
+</td></tr>
+</tbody></table>
+</td></tr>
+
+
+</tbody></table><font face="ARIAL">
+
+<script language="JavaScript"><!--
+if ((tfauth)&&(scname)) {
+   document.forms[0].elements[0].value = scname;
+   document.forms[0].elements[0].disabled = true;
+   document.forms[0].elements[1].focus();
+}
+else {
+   document.forms[0].elements[0].focus();
+}
+--></script>
+
+<script language="JavaScript">
+if( top.window != this.window ) {
+   top.location="login.htm";
+}
+if (sso) {
+    token = createToken(ssoname, ssopass, ssodn, sessionkey, sessionindex);
+    SetCookie('hp-iLO-Login', token, '/', true, null, null);
+    if (ssourl.length) {
+       if (ssourl=="IRC") {
+          top.location.replace('/HRemCons.htm?fullscreen=0&restart=1');
+       } else if (ssourl=="IRCFS") {
+          top.location.replace('/HRemCons.htm?fullscreen=1&restart=1');
+       } else if (ssourl=="REMCONS") {
+          top.location.replace('/drc2fram.htm?restart=1');
+       } else if (ssourl=="RSC") {
+          top.location.replace('/dems.htm');
+       } else if ((ssourl=="VMEDIA") || (ssourl=="VM")) {
+          top.location.replace('/vtd028.htm');
+       } else {
+          top.location.replace(ssourl);
+       }
+    } else {
+       top.location.replace('index.htm');
+    }
+}
+</script>
+<script language="JavaScript" type="text/javascript">
+	reconcileEventHandlers();
+</script>
+
+
+</font></form></body></html>

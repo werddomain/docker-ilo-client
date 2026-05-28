@@ -1,0 +1,42 @@
+services:
+  ilo-client:
+    build: .
+    container_name: ilo-client
+    environment:
+      - HILO_HOST=${HILO_HOST}
+      - HILO_USER=${HILO_USER}
+      - HILO_PASS=${HILO_PASS}
+      - ILO_VERSION=${ILO_VERSION:-4}
+    volumes:
+      - ./app-data:/app-data/
+    # Uncomment to expose VNC directly (without web client)
+    # ports:
+    #   - "5900:5900"
+
+  novnc:
+    image: geek1011/easy-novnc
+    container_name: ilo-novnc
+    depends_on:
+      - ilo-client
+    environment:
+      - NOVNC_VNC_SERVER=ilo-client:5900
+    # Uncomment to expose novnc directly (without web ngix password protection)
+    #ports:
+    #  - "8080:8080"
+    command:
+      - --addr=:8080
+      - --host=ilo-client
+      - --port=5900
+      - --basic-ui
+      - --no-url-password
+
+  nginx:
+    image: nginx:alpine
+    container_name: ilo-nginx
+    depends_on:
+      - novnc
+    ports:
+      - "8443:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./htpasswd:/etc/nginx/.htpasswd:ro
