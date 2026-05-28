@@ -12,6 +12,13 @@ else
 fi
 
 # Run firefox in an infinite loop
+export MOZ_DISABLE_PANGO=1
+export MOZ_CRASHREPORTER_DISABLE=1
+
+# Ensure plugins directory exists and link the Java plugin
+mkdir -p /config/.mozilla/plugins
+ln -sf /opt/java/jre/lib/i386/libnpjp2.so /config/.mozilla/plugins/libnpjp2.so
+
 while true; do
     # Clean up stale Firefox lock files before EVERY launch
     find /config/.mozilla/firefox -name "lock" -delete 2>/dev/null

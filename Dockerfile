@@ -13,7 +13,8 @@ RUN dpkg --add-architecture i386 && \
         libx11-6:i386 libxext6:i386 \
         libxrender1:i386 libxtst6:i386 \
         libgtk2.0-0:i386 libasound2:i386 \
-        libdbus-glib-1-2:i386 \
+        libdbus-glib-1-2:i386 libgconf-2-4:i386 \
+        liborbit2:i386 dbus-x11 \
         libpango1.0-0:i386 libpangoxft-1.0-0:i386 \
         libpangox-1.0-0:i386 \
         libxt6:i386 libxinerama1:i386 \
@@ -27,21 +28,21 @@ RUN cd /opt && \
     rm firefox-3.6.28.tar.bz2 && \
     ln -s /opt/firefox/firefox /usr/bin/firefox
 
-# Copy and install JRE 1.5.0_11 (32-bit)
+# Copy and install JRE 6u10 (32-bit)
 WORKDIR /opt/java
-COPY jre-1_5_0_11-linux-i586.bin .
-RUN chmod +x jre-1_5_0_11-linux-i586.bin && \
-    echo "yes" | ./jre-1_5_0_11-linux-i586.bin || true && \
-    rm jre-1_5_0_11-linux-i586.bin && \
-    mv jre1.5.0_11 jre
+COPY jre-6u10-linux-i586.bin .
+RUN chmod +x jre-6u10-linux-i586.bin && \
+    echo "yes" | ./jre-6u10-linux-i586.bin || true && \
+    rm jre-6u10-linux-i586.bin && \
+    mv jre1.6.0_10 jre
 
 # Configure environment for Java
 ENV JAVA_HOME=/opt/java/jre
 ENV PATH=$JAVA_HOME/bin:$PATH
 
-# Link the Java plugin to Firefox 2.0 (OJI plugin for Java 5)
+# Link the Java plugin to Firefox (Next-Generation plugin for Java 6)
 RUN mkdir -p /opt/firefox/plugins && \
-    ln -s /opt/java/jre/plugin/i386/ns7/libjavaplugin_oji.so /opt/firefox/plugins/libjavaplugin_oji.so
+    ln -s /opt/java/jre/lib/i386/libnpjp2.so /opt/firefox/plugins/libnpjp2.so
 
 COPY userscript.sh /etc/cont-init.d/00-userscript.sh
 COPY install-ca.sh /install-ca.sh
